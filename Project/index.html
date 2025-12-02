@@ -3,12 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>예약 시스템 웹페이지</title>
+    <title>예약 시스템 웹사이트</title>
     <link rel="stylesheet" href="main.css">
+    <style>
+      /* 스크롤 가능하도록 기본 레이아웃 조정 */
+      html, body {
+        height: auto;
+        min-height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      /* 본문 하단 여백 조정 (고정 패널 제거로 일반 여백 사용) */
+      main { padding-bottom: 24px; }
+
+      /* (선택) 상단 고정 패널이 있을 경우 본문 상단 여백 확보 */
+      header + main { padding-top: 12px; }
+
+      /* 고정 패널을 일반 섹션으로 변경: 도서관 예약 섹션 아래에 표시됩니다. */
+      .floating-panels {
+        display: flex;
+        gap: 20px;
+        justify-content: space-between;
+        margin-top: 12px;
+        align-items: flex-start;
+        /* 기본: 가로 정렬 (줄바꿈 허용은 작은 화면에서만) */
+        flex-wrap: nowrap;
+      }
+      .floating-panels > section {
+        background: rgba(255,255,255,0.95);
+        border: 1px solid #ddd;
+        padding: 12px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        /* 가로로 균등 분할: 좌우 나란히 배치 */
+        flex: 1 1 48%;
+        min-width: 300px;
+      }
+       /* 작은 화면에서는 세로 스택 */
+       @media (max-width: 700px) {
+        .floating-panels { flex-direction: column; gap:12px; flex-wrap: wrap; }
+        .floating-panels > section { width: 100%; min-width: 0; }
+        main { padding-bottom: 160px; }
+      }
+    </style>
 </head>
 <body>
     <header>
-        <h1>도서관 예약 시스템</h1>
+        <h1>예약 시스템 웹페이지</h1>
         <nav>
             <a href="login.html" class="btn">로그인</a>
             <a href="signup.html" class="btn signup">회원가입</a>
@@ -16,14 +57,50 @@
     </header>
 
     <main>
-        <h2>도서관 예약 시스템</h2>
-        <p>##############</p>
+      <!-- 도서관 예약시스템 섹션 (하단 고정 패널 위에 표시) -->
+      <section id="library-overview" style="margin:16px 0; padding:12px; background:#fafafa; border:1px solid #e6e6e6; border-radius:8px;">
+        <h3>도서관 예약시스템</h3>
+        <p>####################</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="reservation.html" class="btn">좌석 예약하러 가기</a>
+          <a href="usage_history.html" class="btn">이용 내역</a>
+          <a href="map.html" class="btn">좌석 배치도</a>
+        </div>
+      </section>
 
+      <!-- 좌측 하단 / 우측 하단 고정 패널 -->
+      <div class="floating-panels">
         <section id="seat-status">
-            <h3>도서관 좌석 현황</h3>
-            <p>##############</p>
-            <!-- 좌석 현황 상세 페이지로 연결할 수 있습니다. -->
-            <a href="#" class="btn">##############</a>
+             <h3>도서관 좌석 현황</h3>
+
+             <div class="building" id="main-building">
+                 <h4>본관</h4>
+                 <p>실시간 사용인원: <span class="current" data-id="main-current">--</span> / 최대수용인원: <span class="max" data-id="main-max">--</span></p>
+                 <a href="main_detail.html" class="btn">상세 보기</a>
+             </div>
+
+             <div class="building" id="annex">
+                 <h4>별관</h4>
+                 <ul class="rooms">
+                     <li>
+                         <strong>1층 열람실</strong>
+                         <span class="status">사용: <span data-id="annex-1f-reading-current">--</span> / <span data-id="annex-1f-reading-max">--</span></span>
+                     </li>
+                     <li>
+                         <strong>1층 노트북열람실</strong>
+                         <span class="status">사용: <span data-id="annex-1f-laptop-current">--</span> / <span data-id="annex-1f-laptop-max">--</span></span>
+                     </li>
+                     <li>
+                         <strong>2층 열람실</strong>
+                         <span class="status">사용: <span data-id="annex-2f-reading-current">--</span> / <span data-id="annex-2f-reading-max">--</span></span>
+                     </li>
+                     <li>
+                         <strong>2층 노트북열람실</strong>
+                         <span class="status">사용: <span data-id="annex-2f-laptop-current">--</span> / <span data-id="annex-2f-laptop-max">--</span></span>
+                     </li>
+                 </ul>
+                 <a href="annex_detail.html" class="btn">상세 보기</a>
+             </div>
         </section>
 
         <section id="seat-reservation">
@@ -32,11 +109,43 @@
             <!-- 좌석 예약 페이지로 연결합니다. -->
             <a href="reservation.html" class="btn">##############</a>
         </section>
+      </div>
     </main>
 
     <footer>
         <p>2025 web programming term project.</p>
     </footer>
+
+    <script>
+    // 실시간 데이터는 실제 API로 교체하세요. 예: '/api/seat-status'
+    async function updateSeatStatus() {
+      try {
+        const res = await fetch('/api/seat-status');
+        if (!res.ok) throw new Error('네트워크 오류');
+        const data = await res.json();
+        // 예시 데이터 구조:
+        //{ main: { current: 30, max: 100 }, annex: { '1f-reading': {current:..,max:..}, ... } }
+        document.querySelector('[data-id="main-current"]').textContent = data.main?.current ?? '--';
+        document.querySelector('[data-id="main-max"]').textContent = data.main?.max ?? '--';
+
+        const map = [
+          ['1f-reading', ['annex-1f-reading-current','annex-1f-reading-max']],
+          ['1f-laptop', ['annex-1f-laptop-current','annex-1f-laptop-max']],
+          ['2f-reading', ['annex-2f-reading-current','annex-2f-reading-max']],
+          ['2f-laptop', ['annex-2f-laptop-current','annex-2f-laptop-max']],
+        ];
+        map.forEach(([key, ids])=>{
+          const room = data.annex?.[key] ?? {};
+          document.querySelector('[data-id="'+ids[0]+'"]').textContent = room.current ?? '--';
+          document.querySelector('[data-id="'+ids[1]+'"]').textContent = room.max ?? '--';
+        });
+      } catch (e) {
+        console.error('좌석 현황 업데이트 실패', e);
+      }
+    }
+
+    updateSeatStatus();
+    setInterval(updateSeatStatus, 15000); // 15초마다 갱신
+    </script>
 </body>
 </html>
-
