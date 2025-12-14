@@ -5,22 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 - 도서관 예약 시스템</title>
     <link rel="stylesheet" href="main.css">
+    <script defer src="js/auth.js"></script>
 </head>
 <body>
     <div class="form-container">
         <h2>회원가입</h2>
-        <form action="#">
+                <form id="signup-form" action="#">
             <div class="form-group">
-                <label for="username">아이디</label>
-                <input type="text" id="username" name="username" required>
+                                <label for="name">이름</label>
+                                <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="password">패스워드</label>
-                <input type="password" id="password" name="password" required>
+                                <label for="email">아이디(이메일)</label>
+                                <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                                <label for="password">패스워드</label>
+                                <input type="password" id="password" name="password" required minlength="4">
             </div>
             <button type="submit" class="btn signup">회원가입</button>
+                        <p id="signup-error" class="error" style="color:#d00; margin-top:8px; display:none;">이미 존재하는 이메일입니다.</p>
+                        <p id="signup-success" class="success" style="color:#0a7; margin-top:8px; display:none;">가입이 완료되었습니다. 로그인해 주세요.</p>
         </form>
         <p class="home-link"><a href="index.html">메인으로 돌아가기</a></p>
     </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', ()=>{
+                const form = document.getElementById('signup-form');
+                const nameEl = document.getElementById('name');
+                const emailEl = document.getElementById('email');
+                const pwEl = document.getElementById('password');
+                const errEl = document.getElementById('signup-error');
+                const sucEl = document.getElementById('signup-success');
+
+                form.addEventListener('submit', (e)=>{
+                    e.preventDefault();
+                    errEl.style.display = 'none';
+                    sucEl.style.display = 'none';
+                    const name = nameEl.value.trim();
+                    const email = emailEl.value.trim().toLowerCase();
+                    const password = pwEl.value;
+                    const ok = window.Auth.signup({ name, email, password });
+                    if (ok) {
+                        sucEl.style.display = 'block';
+                        form.reset();
+                    } else {
+                        errEl.style.display = 'block';
+                    }
+                });
+            });
+        </script>
 </body>
 </html>
