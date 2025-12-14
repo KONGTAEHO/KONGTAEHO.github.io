@@ -27,100 +27,209 @@
   </header>
 
   <main class="container">
-    <section class="hero">
-      <div>
-        <h1>서울과기대 도서관 예약 · 좌석 안내</h1>
-        <p>실시간 좌석 현황, 예약, 이용 내역을 한 곳에서 확인하세요.</p>
-        <div class="chips">
-          <span class="chip">운영시간 09:00 - 22:00</span>
-          <span class="chip">본관 · 별관 실시간 좌석</span>
-          <span class="chip">노트북 열람실 포함</span>
+    <!-- 로그인하지 않은 사용자용 기본 메인화면 -->
+    <div id="guest-view">
+      <section class="hero">
+        <div>
+          <h1>서울과기대 도서관 예약 · 좌석 안내</h1>
+          <p>실시간 좌석 현황, 예약, 이용 내역을 한 곳에서 확인하세요.</p>
+          <div class="chips">
+            <span class="chip">운영시간 09:00 - 22:00</span>
+            <span class="chip">본관 · 별관 실시간 좌석</span>
+            <span class="chip">노트북 열람실 포함</span>
+          </div>
+          <div class="search-box">
+            <input type="text" placeholder="자료명, 열람실, 건물명을 입력하세요 (데모)">
+            <button class="btn accent" type="button">검색</button>
+          </div>
+          <div class="chips" style="margin-top:12px;">
+            <a href="reservation.html" class="btn">좌석 예약하기</a>
+            <a href="usage_history.html" class="btn outline">내 예약 확인</a>
+          </div>
         </div>
-        <div class="search-box">
-          <input type="text" placeholder="자료명, 열람실, 건물명을 입력하세요 (데모)">
-          <button class="btn accent" type="button">검색</button>
+        <div class="card">
+          <h3>바로 가기</h3>
+          <div class="grid-3" style="grid-template-columns: 1fr; gap:10px;">
+            <a class="btn outline" href="main_detail.html">본관 좌석 상세</a>
+            <a class="btn outline" href="annex_detail.html">별관 좌석 상세</a>
+            <a class="btn outline" href="map.html">좌석 배치도 보기</a>
+          </div>
+          <div class="chips" style="margin-top:12px;">
+            <span class="chip">Wi-Fi 가능</span>
+            <span class="chip">조용한 학습존</span>
+          </div>
         </div>
-        <div class="chips" style="margin-top:12px;">
-          <a href="reservation.html" class="btn">좌석 예약하기</a>
-          <a href="usage_history.html" class="btn outline">내 예약 확인</a>
-        </div>
-      </div>
-      <div class="card">
-        <h3>바로 가기</h3>
-        <div class="grid-3" style="grid-template-columns: 1fr; gap:10px;">
-          <a class="btn outline" href="main_detail.html">본관 좌석 상세</a>
-          <a class="btn outline" href="annex_detail.html">별관 좌석 상세</a>
-          <a class="btn outline" href="map.html">좌석 배치도 보기</a>
-        </div>
-        <div class="chips" style="margin-top:12px;">
-          <span class="chip">Wi-Fi 가능</span>
-          <span class="chip">조용한 학습존</span>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="stats-grid" id="seat-status">
-      <div class="card stat">
-        <div class="label">본관 좌석 현황</div>
-        <div class="value"><span data-id="main-current">--</span> / <span data-id="main-max">--</span></div>
-        <div class="meta">실시간 사용 좌석 / 총 좌석</div>
-        <div class="chips">
-          <a class="btn outline" href="main_detail.html" style="width:fit-content;">본관 상세 보기</a>
+      <section class="stats-grid" id="seat-status">
+        <div class="card stat">
+          <div class="label">본관 좌석 현황</div>
+          <div class="value"><span data-id="main-current">--</span> / <span data-id="main-max">--</span></div>
+          <div class="meta">실시간 사용 좌석 / 총 좌석</div>
+          <div class="chips">
+            <a class="btn outline" href="main_detail.html" style="width:fit-content;">본관 상세 보기</a>
+          </div>
         </div>
-      </div>
-      <div class="card stat">
-        <div class="label">별관 좌석 현황</div>
-        <div class="meta">열람실별 사용 좌석 / 총 좌석</div>
-        <ul class="list">
-          <li>1층 열람실 <strong><span data-id="annex-1f-reading-current">--</span> / <span data-id="annex-1f-reading-max">--</span></strong></li>
-          <li>1층 노트북열람실 <strong><span data-id="annex-1f-laptop-current">--</span> / <span data-id="annex-1f-laptop-max">--</span></strong></li>
-          <li>2층 열람실 <strong><span data-id="annex-2f-reading-current">--</span> / <span data-id="annex-2f-reading-max">--</span></strong></li>
-          <li>2층 노트북열람실 <strong><span data-id="annex-2f-laptop-current">--</span> / <span data-id="annex-2f-laptop-max">--</span></strong></li>
-        </ul>
-        <div class="chips">
-          <a class="btn outline" href="annex_detail.html" style="width:fit-content;">별관 상세 보기</a>
+        <div class="card stat">
+          <div class="label">별관 좌석 현황</div>
+          <div class="meta">열람실별 사용 좌석 / 총 좌석</div>
+          <ul class="list">
+            <li>1층 열람실 <strong><span data-id="annex-1f-reading-current">--</span> / <span data-id="annex-1f-reading-max">--</span></strong></li>
+            <li>1층 노트북열람실 <strong><span data-id="annex-1f-laptop-current">--</span> / <span data-id="annex-1f-laptop-max">--</span></strong></li>
+            <li>2층 열람실 <strong><span data-id="annex-2f-reading-current">--</span> / <span data-id="annex-2f-reading-max">--</span></strong></li>
+            <li>2층 노트북열람실 <strong><span data-id="annex-2f-laptop-current">--</span> / <span data-id="annex-2f-laptop-max">--</span></strong></li>
+          </ul>
+          <div class="chips">
+            <a class="btn outline" href="annex_detail.html" style="width:fit-content;">별관 상세 보기</a>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="grid-3">
-      <div class="card">
-        <h3>도서관 이용 안내</h3>
-        <ul class="list">
-          <li>학생증 또는 모바일 카드 지참</li>
-          <li>음식 반입 제한, 뚜껑 있는 음료만 가능</li>
-          <li>노트북 열람실: 헤드폰 필수</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>공지</h3>
-        <ul class="list">
-          <li>중간고사 주간 연장 개방 (09:00-24:00)</li>
-          <li>별관 1층 노트북열람실 의자 교체 완료</li>
-          <li>분실물 센터: 1층 안내데스크</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>빠른 서비스</h3>
-        <p>좌석 예약, 이용 내역, 좌석 배치도를 빠르게 확인하세요.</p>
-        <div class="chips" style="margin-top:10px;">
-          <a class="btn" href="reservation.html">좌석 예약</a>
-          <a class="btn outline" href="usage_history.html">이용 내역</a>
+      <section class="grid-3">
+        <div class="card">
+          <h3>도서관 이용 안내</h3>
+          <ul class="list">
+            <li>학생증 또는 모바일 카드 지참</li>
+            <li>음식 반입 제한, 뚜껑 있는 음료만 가능</li>
+            <li>노트북 열람실: 헤드폰 필수</li>
+          </ul>
         </div>
-      </div>
-    </section>
+        <div class="card">
+          <h3>공지</h3>
+          <ul class="list">
+            <li>중간고사 주간 연장 개방 (09:00-24:00)</li>
+            <li>별관 1층 노트북열람실 의자 교체 완료</li>
+            <li>분실물 센터: 1층 안내데스크</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>빠른 서비스</h3>
+          <p>좌석 예약, 이용 내역, 좌석 배치도를 빠르게 확인하세요.</p>
+          <div class="chips" style="margin-top:10px;">
+            <a class="btn" href="reservation.html">좌석 예약</a>
+            <a class="btn outline" href="usage_history.html">이용 내역</a>
+          </div>
+        </div>
+      </section>
 
-    <section class="cta">
-      <div>
-        <h3 style="margin:0 0 4px;">로그인하고 좌석을 예약하세요</h3>
-        <p>실시간 좌석 현황을 보고 바로 예약할 수 있습니다.</p>
-      </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="login.html" class="btn">로그인</a>
-        <a href="signup.html" class="btn outline">회원가입</a>
-        <a href="reservation.html" class="btn accent">좌석 예약</a>
-      </div>
-    </section>
+      <section class="cta">
+        <div>
+          <h3 style="margin:0 0 4px;">로그인하고 좌석을 예약하세요</h3>
+          <p>실시간 좌석 현황을 보고 바로 예약할 수 있습니다.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="login.html" class="btn">로그인</a>
+          <a href="signup.html" class="btn outline">회원가입</a>
+          <a href="reservation.html" class="btn accent">좌석 예약</a>
+        </div>
+      </section>
+    </div>
+
+    <!-- 로그인한 사용자용 맞춤 대시보드 -->
+    <div id="user-dashboard" style="display:none;">
+      <section class="hero" style="margin-bottom:30px;">
+        <div>
+          <h1 id="dashboard-greeting">안녕하세요!</h1>
+          <p id="dashboard-subtitle">오늘도 열심히 공부하세요.</p>
+          <div class="chips">
+            <a href="reservation.html" class="btn accent">좌석 예약하기</a>
+            <a href="usage_history.html" class="btn outline">예약 내역 보기</a>
+            <a href="main_detail.html" class="btn outline">본관 좌석</a>
+            <a href="annex_detail.html" class="btn outline">별관 좌석</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 현재 활성 예약 -->
+      <section class="card" id="active-reservation-section" style="display:none; margin-bottom:20px;">
+        <h3>현재 예약 중인 좌석</h3>
+        <div id="active-reservation-info"></div>
+      </section>
+
+      <!-- 사용자 통계 -->
+      <section class="stats-grid" id="user-stats-section" style="margin-bottom:20px;">
+        <div class="card stat">
+          <div class="label">총 예약 횟수</div>
+          <div class="value"><span id="total-reservations">0</span>회</div>
+          <div class="meta">현재까지 예약한 좌석</div>
+        </div>
+        <div class="card stat">
+          <div class="label">활성 예약</div>
+          <div class="value"><span id="active-reservations">0</span>회</div>
+          <div class="meta">예약 중인 좌석</div>
+        </div>
+        <div class="card stat">
+          <div class="label">취소 내역</div>
+          <div class="value"><span id="cancelled-reservations">0</span>회</div>
+          <div class="meta">취소한 예약</div>
+        </div>
+      </section>
+
+      <!-- 자주 사용하는 열람실 -->
+      <section class="card" id="frequent-room-section" style="display:none; margin-bottom:20px;">
+        <h3>자주 사용하는 열람실</h3>
+        <div id="frequent-room-info"></div>
+      </section>
+
+      <!-- 최근 취소된 예약 -->
+      <section class="card" id="recent-cancelled-section" style="display:none; margin-bottom:20px;">
+        <h3>최근 취소 내역</h3>
+        <ul class="list" id="recent-cancelled-list"></ul>
+      </section>
+
+      <!-- 실시간 좌석 현황 -->
+      <section class="stats-grid" id="seat-status-logged-in" style="margin-bottom:20px;">
+        <div class="card stat">
+          <div class="label">본관 좌석 현황</div>
+          <div class="value"><span data-id="main-current-li">--</span> / <span data-id="main-max-li">--</span></div>
+          <div class="meta">실시간 사용 좌석 / 총 좌석</div>
+          <div class="chips">
+            <a class="btn outline" href="main_detail.html" style="width:fit-content;">본관 상세 보기</a>
+          </div>
+        </div>
+        <div class="card stat">
+          <div class="label">별관 좌석 현황</div>
+          <div class="meta">열람실별 사용 좌석 / 총 좌석</div>
+          <ul class="list">
+            <li>1층 열람실 <strong><span data-id="annex-1f-reading-current-li">--</span> / <span data-id="annex-1f-reading-max-li">--</span></strong></li>
+            <li>1층 노트북열람실 <strong><span data-id="annex-1f-laptop-current-li">--</span> / <span data-id="annex-1f-laptop-max-li">--</span></strong></li>
+            <li>2층 열람실 <strong><span data-id="annex-2f-reading-current-li">--</span> / <span data-id="annex-2f-reading-max-li">--</span></strong></li>
+            <li>2층 노트북열람실 <strong><span data-id="annex-2f-laptop-current-li">--</span> / <span data-id="annex-2f-laptop-max-li">--</span></strong></li>
+          </ul>
+          <div class="chips">
+            <a class="btn outline" href="annex_detail.html" style="width:fit-content;">별관 상세 보기</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 빠른 링크 -->
+      <section class="grid-3">
+        <div class="card">
+          <h3>도서관 이용 안내</h3>
+          <ul class="list">
+            <li>학생증 또는 모바일 카드 지참</li>
+            <li>음식 반입 제한, 뚜껑 있는 음료만 가능</li>
+            <li>노트북 열람실: 헤드폰 필수</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>공지</h3>
+          <ul class="list">
+            <li>중간고사 주간 연장 개방 (09:00-24:00)</li>
+            <li>별관 1층 노트북열람실 의자 교체 완료</li>
+            <li>분실물 센터: 1층 안내데스크</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>빠른 서비스</h3>
+          <p>좌석 예약, 이용 내역, 좌석 배치도를 빠르게 확인하세요.</p>
+          <div class="chips" style="margin-top:10px;">
+            <a class="btn" href="reservation.html">좌석 예약</a>
+            <a class="btn outline" href="usage_history.html">이용 내역</a>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer>
@@ -128,7 +237,7 @@
   </footer>
 
   <script>
-    // 인증 UI 초기화
+    // 인증 UI 초기화 및 사용자별 맞춤 대시보드 렌더링
     (function initAuthUI(){
       const session = window.Auth.getSession();
       const welcome = document.getElementById('welcome');
@@ -136,25 +245,125 @@
       const linkLogin = document.getElementById('link-login');
       const linkSignup = document.getElementById('link-signup');
       const btnLogout = document.getElementById('btn-logout');
+      const guestView = document.getElementById('guest-view');
+      const userDashboard = document.getElementById('user-dashboard');
+
       if (session) {
+        // 로그인된 사용자
         userName.textContent = session.name || session.email;
         welcome.style.display = 'inline-flex';
         btnLogout.style.display = 'inline-flex';
         linkLogin.style.display = 'none';
         linkSignup.style.display = 'none';
+        
+        // 맞춤 대시보드 표시
+        guestView.style.display = 'none';
+        userDashboard.style.display = 'block';
+        
+        // 사용자 대시보드 데이터 채우기
+        renderUserDashboard(session);
       } else {
+        // 미로그인 사용자
         welcome.style.display = 'none';
         btnLogout.style.display = 'none';
         linkLogin.style.display = 'inline-flex';
         linkSignup.style.display = 'inline-flex';
+        
+        // 기본 화면 표시
+        guestView.style.display = 'block';
+        userDashboard.style.display = 'none';
+        
+        updateSeatStatus();
+        setInterval(updateSeatStatus, 5000);
       }
+
       btnLogout?.addEventListener('click', ()=>{
         window.Auth.logout();
         window.location.reload();
       });
     })();
 
-    // 좌석 현황 표시 (로컬 서비스 기반)
+    // 사용자 맞춤 대시보드 렌더링
+    function renderUserDashboard(session) {
+      if (!window.Library) return;
+      
+      const dashboard = window.Library.getUserDashboard(session.email);
+      const stats = window.Library.getUserStats(session.email);
+      
+      // 인사말
+      const greeting = document.getElementById('dashboard-greeting');
+      const now = new Date().getHours();
+      let timeGreeting = '좋은 아침입니다';
+      if (now >= 12 && now < 18) timeGreeting = '좋은 오후입니다';
+      else if (now >= 18) timeGreeting = '좋은 저녁입니다';
+      greeting.textContent = `${timeGreeting}, ${session.name || session.email}님!`;
+      
+      // 통계 업데이트
+      document.getElementById('total-reservations').textContent = stats.total;
+      document.getElementById('active-reservations').textContent = stats.active;
+      document.getElementById('cancelled-reservations').textContent = stats.cancelled;
+      
+      // 현재 활성 예약
+      const activeResSection = document.getElementById('active-reservation-section');
+      if (dashboard.activeReservation) {
+        activeResSection.style.display = 'block';
+        const info = document.getElementById('active-reservation-info');
+        info.innerHTML = `
+          <div class="reservation-card">
+            <p><strong>${dashboard.activeReservation.buildingName} ${dashboard.activeReservation.roomName}</strong></p>
+            <p>좌석 번호: <span style="font-size:1.2em; font-weight:bold; color:var(--primary);">${dashboard.activeReservation.seatLabel}</span></p>
+            <p style="color:var(--sub); font-size:0.9em;">예약 시간: ${new Date(dashboard.activeReservation.reservedAt).toLocaleString('ko-KR')}</p>
+            <div style="margin-top:12px;">
+              <a href="usage_history.html" class="btn outline" style="width:fit-content;">예약 내역 관리</a>
+            </div>
+          </div>
+        `;
+      } else {
+        activeResSection.style.display = 'none';
+      }
+      
+      // 자주 사용하는 열람실
+      const frequentSection = document.getElementById('frequent-room-section');
+      if (dashboard.frequentRoom) {
+        frequentSection.style.display = 'block';
+        const info = document.getElementById('frequent-room-info');
+        info.innerHTML = `
+          <div style="padding:15px; background:var(--bg); border-radius:var(--radius);">
+            <p><strong>${dashboard.frequentRoom.roomName}</strong></p>
+            <p style="color:var(--sub); font-size:0.9em;">지금까지 ${dashboard.frequentRoom.count}번 이용했습니다.</p>
+            <div style="margin-top:12px;">
+              <a href="reservation.html" class="btn outline" style="width:fit-content;">이곳에서 예약하기</a>
+            </div>
+          </div>
+        `;
+      } else {
+        frequentSection.style.display = 'none';
+      }
+      
+      // 최근 취소 내역
+      const cancelledSection = document.getElementById('recent-cancelled-section');
+      if (dashboard.recentCancelled && dashboard.recentCancelled.length > 0) {
+        cancelledSection.style.display = 'block';
+        const list = document.getElementById('recent-cancelled-list');
+        list.innerHTML = dashboard.recentCancelled.map(r => `
+          <li>
+            <strong>${r.buildingName} ${r.roomName}</strong>
+            <br>
+            <span style="color:var(--sub); font-size:0.9em;">
+              좌석 ${r.seatLabel} · 취소일: ${new Date(r.cancelledAt).toLocaleDateString('ko-KR')}
+            </span>
+          </li>
+        `).join('');
+      } else {
+        cancelledSection.style.display = 'none';
+      }
+      
+      // 좌석 현황 업데이트 (로그인된 사용자용)
+      updateSeatStatusLoggedIn();
+      setInterval(updateSeatStatusLoggedIn, 5000);
+    }
+
+    // 좌석 현황 표시 (미로그인 사용자)
     function updateSeatStatus() {
       if (!window.Library) return;
       const data = window.Library.summary();
@@ -174,8 +383,25 @@
       });
     }
 
-    updateSeatStatus();
-    setInterval(updateSeatStatus, 5000);
+    // 좌석 현황 표시 (로그인된 사용자)
+    function updateSeatStatusLoggedIn() {
+      if (!window.Library) return;
+      const data = window.Library.summary();
+      document.querySelector('[data-id="main-current-li"]').textContent = data.main?.current ?? '--';
+      document.querySelector('[data-id="main-max-li"]').textContent = data.main?.max ?? '--';
+
+      const map = [
+        ['annex-1-reading', ['annex-1f-reading-current-li','annex-1f-reading-max-li']],
+        ['annex-1-laptop', ['annex-1f-laptop-current-li','annex-1f-laptop-max-li']],
+        ['annex-2-reading', ['annex-2f-reading-current-li','annex-2f-reading-max-li']],
+        ['annex-2-laptop', ['annex-2f-laptop-current-li','annex-2f-laptop-max-li']],
+      ];
+      map.forEach(([roomId, ids])=>{
+        const room = data.annex?.rooms?.[roomId] ?? {};
+        document.querySelector('[data-id="'+ids[0]+'"]')?.textContent = room.current ?? '--';
+        document.querySelector('[data-id="'+ids[1]+'"]')?.textContent = room.max ?? '--';
+      });
+    }
   </script>
 </body>
 </html>

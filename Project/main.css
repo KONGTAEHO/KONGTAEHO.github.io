@@ -249,3 +249,102 @@ button.btn.signup:hover {
 .home-link a:hover {
     text-decoration: underline;
 }
+/* 맞춤 대시보드 스타일 */
+.reservation-card {
+    padding: 15px;
+    background: linear-gradient(135deg, #ecf2ff, #f0f8ff);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary);
+}
+
+.reservation-card p {
+    margin: 8px 0;
+}
+
+.reservation-card strong {
+    color: var(--primary);
+    font-size: 1.1em;
+}
+
+#dashboard-greeting {
+    background: linear-gradient(135deg, var(--primary), #3b7bff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+#dashboard-subtitle {
+    color: var(--sub);
+    margin-bottom: 20px;
+}
+
+/* 통계 카드 애니메이션 */
+.stat {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 35px rgba(31, 75, 153, 0.15);
+}
+
+.stat .value {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 12px 0;
+}
+
+.stat .label {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.stat .meta {
+    font-size: 0.85em;
+    color: var(--sub);
+    margin-bottom: 12px;
+}
+
+/* 사용자 대시보드 섹션 */
+#user-dashboard .card h3 {
+    margin-top: 0;
+    color: var(--primary);
+    border-bottom: 2px solid var(--line);
+    padding-bottom: 12px;
+}
+
+#user-dashboard .list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+#user-dashboard .list li:last-child {
+    border-bottom: none;
+}
+
+#user-dashboard .list strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    #dashboard-greeting {
+        font-size: 1.8em;
+    }
+    
+    .stat .value {
+        font-size: 1.8em;
+    }
+}
