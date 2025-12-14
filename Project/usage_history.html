@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이용 내역</title>
+  <link rel="stylesheet" href="main.css">
+  <script defer src="js/auth.js"></script>
+  <script defer src="js/library.js"></script>
+  <style>
+    main { text-align:left; max-width:900px; margin:0 auto; }
+    table { width:100%; border-collapse: collapse; margin-top:16px; }
+    th, td { border:1px solid #ddd; padding:8px; text-align:left; }
+    th { background:#f7f7f7; }
+    .badge { padding:4px 8px; border-radius:4px; font-size:0.85rem; }
+    .badge.active { background:#e8f7ee; color:#1b7d39; border:1px solid #b4e1c5; }
+    .badge.cancelled { background:#ffecec; color:#a33; border:1px solid #f5bcbc; }
+    .msg { margin-top:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>이용 내역</h1>
+    <nav>
+      <a href="index.html" class="btn">메인</a>
+      <a href="reservation.html" class="btn">좌석 예약</a>
+    </nav>
+  </header>
+
+  <main>
+    <p>내 예약 기록입니다. 진행 중인 예약은 취소할 수 있습니다.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>좌석</th>
+          <th>건물 / 열람실</th>
+          <th>상태</th>
+          <th>예약 시각</th>
+          <th>취소 시각</th>
+          <th>동작</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p id="empty" class="msg" style="display:none;">예약 내역이 없습니다.</p>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const session = window.Auth.getSession();
+      if (!session){
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const rowsEl = document.getElementById('rows');
+      const emptyEl = document.getElementById('empty');
+
+      function fmt(ts){
+        if (!ts) return '-';
+        const d = new Date(ts);
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      }
+
+      function render(){
+        const list = window.Library.listUserReservations(session.email);
+        rowsEl.innerHTML = '';
+        if (!list.length){ emptyEl.style.display = 'block'; return; }
+        emptyEl.style.display = 'none';
+        list.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.seatLabel}</td>
+            <td>${item.buildingName} / ${item.roomName}</td>
+            <td><span class="badge ${item.status}">${item.status === 'active' ? '사용중' : '취소됨'}</span></td>
+            <td>${fmt(item.reservedAt)}</td>
+            <td>${item.status === 'cancelled' ? fmt(item.cancelledAt) : '-'}</td>
+            <td></td>
+          `;
+          const actionCell = tr.lastElementChild;
+          if (item.status === 'active'){
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = '취소';
+            btn.style.width = 'auto';
+            btn.addEventListener('click', ()=>{
+              const res = window.Library.cancelReservation(item.id, session.email);
+              if (!res.ok){ alert('취소에 실패했습니다.'); return; }
+              render();
+            });
+            actionCell.appendChild(btn);
+          } else {
+            actionCell.textContent = '-';
+          }
+          rowsEl.appendChild(tr);
+        });
+      }
+
+      render();
+    });
+  </script>
+</body>
+</html>

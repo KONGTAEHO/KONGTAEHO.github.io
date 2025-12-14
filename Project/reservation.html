@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>좌석 예약</title>
+  <link rel="stylesheet" href="main.css">
+  <script defer src="js/auth.js"></script>
+  <script defer src="js/library.js"></script>
+  <style>
+    main { text-align:left; max-width:960px; margin:0 auto; }
+    .controls { display:flex; gap:12px; flex-wrap:wrap; margin:12px 0; }
+    select, .info { padding:8px; border:1px solid #ddd; border-radius:4px; background:#fff; }
+    .seats { display:grid; gap:8px; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); margin-top:12px; }
+    .seat { padding:12px; border-radius:6px; border:1px solid #ddd; text-align:center; cursor:pointer; background:#f9f9f9; }
+    .seat.reserved { background:#ffecec; border-color:#f5bcbc; cursor:not-allowed; color:#a33; }
+    .seat.available { background:#e8f7ee; border-color:#b4e1c5; color:#1b7d39; }
+    .status { margin-top:8px; font-size:0.9rem; color:#555; }
+    .message { margin-top:12px; padding:10px; border-radius:6px; display:none; }
+    .message.ok { background:#e8f7ee; border:1px solid #b4e1c5; color:#1b7d39; display:block; }
+    .message.err { background:#ffecec; border:1px solid #f5bcbc; color:#a33; display:block; }
+    .back { margin-top:12px; display:inline-block; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>좌석 예약</h1>
+    <nav>
+      <a href="index.html" class="btn">메인</a>
+      <a href="usage_history.html" class="btn">이용 내역</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="info">로그인한 사용자만 예약할 수 있습니다. 좌석을 선택하면 즉시 예약됩니다.</p>
+    <div class="controls">
+      <label>건물
+        <select id="building"></select>
+      </label>
+      <label>열람실
+        <select id="room"></select>
+      </label>
+      <div class="info" id="summary">사용 좌석: -- / --</div>
+    </div>
+
+    <div id="seats" class="seats"></div>
+    <div id="msg" class="message"></div>
+    <p class="back"><a href="index.html">← 메인으로</a></p>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const session = window.Auth.getSession();
+      if (!session){
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const buildingSel = document.getElementById('building');
+      const roomSel = document.getElementById('room');
+      const seatsEl = document.getElementById('seats');
+      const msgEl = document.getElementById('msg');
+      const summaryEl = document.getElementById('summary');
+
+      const buildingOptions = [
+        { id:'main', name:'본관' },
+        { id:'annex', name:'별관' }
+      ];
+      buildingOptions.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id; opt.textContent = b.name;
+        buildingSel.appendChild(opt);
+      });
+
+      function refreshRooms(){
+        const buildingId = buildingSel.value;
+        roomSel.innerHTML = '';
+        const rooms = window.Library.listRooms(buildingId);
+        rooms.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.id; opt.textContent = r.name;
+          roomSel.appendChild(opt);
+        });
+        refreshSeats();
+      }
+
+      function refreshSummary(room){
+        const { current, max } = room.summary;
+        summaryEl.textContent = `사용 좌석: ${current} / ${max}`;
+      }
+
+      function renderSeat(seat){
+        const div = document.createElement('button');
+        div.className = 'seat ' + (seat.reservedBy ? 'reserved' : 'available');
+        div.textContent = seat.label;
+        div.title = seat.roomName;
+        if (!seat.reservedBy){
+          div.addEventListener('click', ()=> reserve(seat.id));
+        } else {
+          div.disabled = true;
+        }
+        return div;
+      }
+
+      function refreshSeats(){
+        const roomId = roomSel.value;
+        seatsEl.innerHTML = '';
+        const rooms = window.Library.listRooms(buildingSel.value);
+        const room = rooms.find(r => r.id === roomId) || rooms[0];
+        if (!room) return;
+        refreshSummary(room);
+        room.seats.forEach(seat => seatsEl.appendChild(renderSeat(seat)));
+      }
+
+      function showMessage(text, ok=true){
+        msgEl.textContent = text;
+        msgEl.className = 'message ' + (ok ? 'ok' : 'err');
+      }
+
+      function reserve(seatId){
+        const res = window.Library.reserveSeat({ seatId, user: session });
+        if (res.ok){
+          showMessage(`${res.seat.label} 좌석이 예약되었습니다.`, true);
+          refreshSeats();
+        } else {
+          const reason = res.reason === 'occupied' ? '이미 예약된 좌석입니다.' : '예약에 실패했습니다.';
+          showMessage(reason, false);
+        }
+      }
+
+      buildingSel.addEventListener('change', refreshRooms);
+      roomSel.addEventListener('change', refreshSeats);
+      refreshRooms();
+    });
+  </script>
+</body>
+</html>

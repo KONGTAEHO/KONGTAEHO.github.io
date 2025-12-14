@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>별관 좌석 상세</title>
+  <link rel="stylesheet" href="main.css">
+  <script defer src="js/library.js"></script>
+  <style>
+    main { text-align:left; max-width:900px; margin:0 auto; }
+    .room { margin:14px 0; padding:12px; border:1px solid #ddd; border-radius:8px; background:#fff; }
+    .seats { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+    .tag { padding:6px 8px; border:1px solid #ddd; border-radius:4px; background:#f9f9f9; }
+    .tag.busy { background:#ffecec; border-color:#f5bcbc; color:#a33; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>별관 좌석 상세</h1>
+    <nav>
+      <a href="index.html" class="btn">메인</a>
+      <a href="reservation.html" class="btn">좌석 예약</a>
+    </nav>
+  </header>
+  <main>
+    <div id="wrap"></div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const wrap = document.getElementById('wrap');
+      const rooms = window.Library.listRooms('annex');
+      rooms.forEach(room => {
+        const used = room.summary.current;
+        const box = document.createElement('div');
+        box.className = 'room';
+        box.innerHTML = `<h3>${room.name}</h3><p>사용 좌석: ${used} / ${room.summary.max}</p>`;
+        const seats = document.createElement('div');
+        seats.className = 'seats';
+        room.seats.forEach(seat => {
+          const tag = document.createElement('span');
+          tag.className = 'tag ' + (seat.reservedBy ? 'busy' : '');
+          tag.textContent = seat.label;
+          seats.appendChild(tag);
+        });
+        box.appendChild(seats);
+        wrap.appendChild(box);
+      });
+    });
+  </script>
+</body>
+</html>

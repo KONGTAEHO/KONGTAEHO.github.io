@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>좌석 배치도</title>
+  <link rel="stylesheet" href="main.css">
+  <script defer src="js/library.js"></script>
+  <style>
+    main { text-align:left; max-width:1024px; margin:0 auto; }
+    .room { margin:16px 0; padding:12px; border:1px solid #ddd; border-radius:8px; background:#fff; }
+    .grid { display:grid; gap:6px; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); margin-top:8px; }
+    .cell { border:1px solid #ddd; border-radius:4px; padding:10px; text-align:center; background:#f9f9f9; }
+    .cell.busy { background:#ffecec; border-color:#f5bcbc; color:#a33; }
+    .legend { display:flex; gap:10px; align-items:center; margin-top:8px; font-size:0.9rem; }
+    .dot { width:14px; height:14px; border-radius:4px; display:inline-block; border:1px solid #ccc; }
+    .dot.free { background:#e8f7ee; border-color:#b4e1c5; }
+    .dot.busy { background:#ffecec; border-color:#f5bcbc; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>좌석 배치도</h1>
+    <nav>
+      <a href="index.html" class="btn">메인</a>
+      <a href="reservation.html" class="btn">좌석 예약</a>
+    </nav>
+  </header>
+
+  <main>
+    <p>건물/열람실별 좌석 배치와 사용 여부를 확인하세요.</p>
+    <div class="legend">
+      <span class="dot free"></span> 비어 있음
+      <span class="dot busy"></span> 사용 중
+    </div>
+    <div id="rooms"></div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const roomsEl = document.getElementById('rooms');
+      const maps = window.Library.listSeatMap();
+      maps.forEach(room => {
+        const wrap = document.createElement('div');
+        wrap.className = 'room';
+        const used = room.seats.filter(s => s.reservedBy).length;
+        wrap.innerHTML = `<h3>${room.buildingName} - ${room.name}</h3><p>사용 좌석: ${used} / ${room.seats.length}</p>`;
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        room.grid.flat().forEach(seat => {
+          const cell = document.createElement('div');
+          cell.className = 'cell ' + (seat.reservedBy ? 'busy' : '');
+          cell.textContent = seat.label;
+          grid.appendChild(cell);
+        });
+        wrap.appendChild(grid);
+        roomsEl.appendChild(wrap);
+      });
+    });
+  </script>
+</body>
+</html>
